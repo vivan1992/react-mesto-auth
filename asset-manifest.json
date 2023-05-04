@@ -22,7 +22,7 @@
     "787.0fc3b920.chunk.js.map": "/static/js/787.0fc3b920.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.753c809f.css",
-    "static/js/main.e6f30bbd.js"
+    "react-mesto-auth/static/css/main.753c809f.css",
+    "react-mesto-auth/static/js/main.e6f30bbd.js"
   ]
 }
