@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
-const Register = ({onRegister}) => {
+const Register = ({onRegister, isLoaded}) => {
   const [formValue, setFormValue] = useState({
     email: '',
     password: ''
@@ -56,7 +56,9 @@ const Register = ({onRegister}) => {
             </span>
           </label>
         </div>
-        <button className="form__button form__button_login form__button_register">Зарегистрироваться</button>
+        <button className="form__button form__button_login form__button_register">
+          {isLoaded ? 'Регистрация...' : 'Зарегистрироваться'}
+        </button>
       </form>
       <Link to="/sign-in" className="login__link">Уже зарегистрированы? Войти</Link>
     </section>

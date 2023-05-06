@@ -24,7 +24,7 @@ function Card ({card, onCardClick, onCardLike, onCardDelete}) {
   }
 
   return (
-    <li className="cards__item">
+    <>
       {isOwn && <div className="cards__delete" onClick={handleDeleteClick}/>}
       <img
         onClick={handleClick}
@@ -38,7 +38,7 @@ function Card ({card, onCardClick, onCardLike, onCardDelete}) {
           <p className="cards__like-counter">{card.likes.length}</p>
         </div>
       </div>
-    </li>
+    </>
   )
 }
 

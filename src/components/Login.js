@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 
-const Login = ({onLogin}) => {
+const Login = ({onLogin, isLoaded}) => {
   const [formValue, setFormValue] = useState({
     email: '',
     password: ''
@@ -60,7 +60,9 @@ const Login = ({onLogin}) => {
             </span>
           </label>
         </div>
-        <button className="form__button form__button_login">Войти</button>
+        <button className="form__button form__button_login">
+          {isLoaded ? 'Вход...' : 'Войти'}
+        </button>
       </form>
     </section>
   )

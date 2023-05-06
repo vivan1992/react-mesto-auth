@@ -1,19 +1,12 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import { useState } from "react";
 
 function Header(props) {
-  const headerButtonText = {
-    '/': 'Выйти',
-    '/sign-up': 'Войти',
-    '/sign-in': 'Регистрация'
-  };
 
-  let location = useLocation();
-
-  const [isburger, setIsBurger] = useState(false);
+  const [isBurger, setIsBurger] = useState(false);
 
   const onClickBurger = () => {
-    setIsBurger(!isburger);
+    setIsBurger(isBurger => !isBurger);
   }
 
   const onClickOut = () => {
@@ -23,7 +16,7 @@ function Header(props) {
 
   return (
     <>
-      {(isburger && props.loggedIn) ?
+      {(isBurger && props.loggedIn) ?
         <div className="header__mobile">
           <p className="header__user">{props.email}</p>
           <button className="header__login-button" onClick={onClickOut}>Выйти</button>
@@ -38,13 +31,17 @@ function Header(props) {
               <p className="header__user">{props.email}</p>
               <button className="header__login-button" onClick={onClickOut}>Выйти</button>
             </div>
-            <div className={isburger ? 'header__close' : 'header__burger'} onClick={onClickBurger}/>
+            <div className={isBurger ? 'header__close' : 'header__burger'} onClick={onClickBurger}/>
           </>
-
           :
-          <Link to={location.pathname === '/sign-in' ? '/sign-up' : '/sign-in'} className="header__login-link">
-            {headerButtonText[location.pathname]}
-          </Link>
+          <Routes>
+            <Route path="/sign-in" element={
+              <Link to="/sign-up" className="header__login-link">Войти</Link>}
+            />
+            <Route path="/sign-up" element={
+              <Link to="/sign-in" className="header__login-link">Регистрация</Link>}
+            />
+          </Routes>
         }
       </header>
     </>

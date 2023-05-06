@@ -6,6 +6,18 @@ function Main ({onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardLike
 
   const currentUser = useContext(CurrentUserContext);
 
+  const cardsElements = cards.map((item) => {
+    return (
+      <li className="cards__item" key={item._id}>
+        <Card
+        card={item}
+        onCardClick={onCardClick}
+        onCardLike={onCardLike}
+        onCardDelete={onCardDelete}/>
+      </li>
+    );
+  })
+
   return (
     <main className="main">
       <section className="profile">
@@ -40,16 +52,7 @@ function Main ({onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardLike
       </section>
       <section className="cards">
         <ul className="cards__items">
-          {cards.map((item) => {
-              return (
-                <Card
-                  card={item}
-                  key={item._id}
-                  onCardClick={onCardClick}
-                  onCardLike={onCardLike}
-                  onCardDelete={onCardDelete}/>
-              );
-          })}
+          {cardsElements}
         </ul>
       </section>
     </main>

@@ -50,7 +50,7 @@ class Api {
   }
 }
 
-const request = new Api({
+const api = new Api({
   baseUrl: baseUrl,
   headers: {
     authorization: token,
@@ -58,4 +58,4 @@ const request = new Api({
   }
 });
 
-export default request;
+export default api;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Route, Routes, useNavigate} from "react-router-dom";
+import { Route, Routes, useNavigate, Navigate} from "react-router-dom";
 
 import ProtectedRouteElement from './ProtectedRoute';
 import Header from './Header';
@@ -14,9 +14,11 @@ import Login from './Login';
 import Register from './Register';
 import InfoTooltip from './InfoTooltip';
 
-import request from '../utils/Api';
+import api from '../utils/Api';
 import apiAuth from '../utils/ApiAuth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
+import ok from '../images/ok.svg';
+import error from '../images/error.svg';
 
 
 function App() {
@@ -28,28 +30,30 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
-  const [deleteCard, setDeleteCard] = useState({});
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [cardToDelete, setCardToDelete] = useState({});
+  const [isLoadedRegister, setIsLoadedRegister] = useState(false);
+  const [isLoadedLogin, setIsLoadedLogin] = useState(false);
+  const [isLoadedUpdateUser, setIsLoadedUpdateUser] = useState(false);
+  const [isLoadedUpdateAvatar, setIsLoadedUpdateAvatar] = useState(false);
+  const [isLoadedAddPlace, setIsLoadedAddPlace] = useState(false);
+  const [isLoadedDeletePlace, setIsLoadedDeletePlace] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(true);
   const [isTooltipPopupOpen, setIsTooltipPopupOpen] = useState(false);
-  const [isOk, setIsOk] = useState(true);
+  const [isSuccessTooltipStatus, setIsSuccessTooltipStatus] = useState(true);
   const [email, setEmail] = useState('');
-  const [token, setToken] = useState('');
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    request.getUserInfo()
-      .then(data => {
-        setCurrentUser(data)})
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(([data, cards]) => {
+          setCurrentUser(data);
+          setCards(cards);
+      })
       .catch(err => console.log(err));
-
-    request.getInitialCards()
-    .then(data => {
-      setCards(data);
-    })
-    .catch(err => console.log(err));
-  }, []);
+    }
+  }, [loggedIn]);
 
   useEffect(() => {
     const jwt = localStorage.getItem('jwt');
@@ -63,12 +67,11 @@ function App() {
           }
         })
         .catch(err => {
-          setIsOk(false);
-          handleOpenTooltip()
+          setIsSuccessTooltipStatus(false);
           console.log(err);
         })
     };
-  }, [token]);
+  }, []);
 
   function handleOpenTooltip() {
     setIsTooltipPopupOpen(true);
@@ -88,7 +91,7 @@ function App() {
 
   function handleDeletePlaceClick (card) {
     setIsDeletePlacePopupOpen(true);
-    setDeleteCard(card);
+    setCardToDelete(card);
   }
 
   function closeAllPopups () {
@@ -108,81 +111,87 @@ function App() {
 
     const isLiked = card.likes.some(i => i._id === currentUser._id);
 
-    request.changeLikeCardStatus(card._id, !isLiked)
+    api.changeLikeCardStatus(card._id, !isLiked)
       .then((newCard) => {
         setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-    });
+      })
+      .catch(err => console.log(err));
   }
 
   function handleUpdateUser(data) {
-    setIsLoaded(true);
-    request.setUserInfo(data)
+    setIsLoadedUpdateUser(true);
+    api.setUserInfo(data)
       .then(res => {
         setCurrentUser(res);
         closeAllPopups();
       })
-      .finally(() => setIsLoaded(false))
+      .finally(() => setIsLoadedUpdateUser(false))
       .catch(err => console.log(err));
   }
 
   function handleUpdateAvatar(data) {
-    setIsLoaded(true);
-    request.updateUserAvatar(data)
+    setIsLoadedUpdateAvatar(true);
+    api.updateUserAvatar(data)
       .then(res => {
         setCurrentUser(res);
         closeAllPopups();
       })
-      .finally(() => setIsLoaded(false))
+      .finally(() => setIsLoadedUpdateAvatar(false))
       .catch(err => console.log(err));
   }
 
   function handleAddPlaceSubmit(data) {
-    setIsLoaded(true);
-    request.addCard(data)
+    setIsLoadedAddPlace(true);
+    api.addCard(data)
       .then(newCard => {
         setCards([newCard, ...cards]);
         closeAllPopups();
       })
-      .finally(() => setIsLoaded(false))
+      .finally(() => setIsLoadedAddPlace(false))
       .catch(err => console.log(err));
     }
 
   function handleDeletePlaceSubmit() {
-    setIsLoaded(true);
-    request.deleteCard(deleteCard._id)
+    setIsLoadedDeletePlace(true);
+    api.cardToDelete(cardToDelete._id)
       .then(() => {
-        setCards((state) => state.filter((c) => c._id === deleteCard._id ? null : c));
+        setCards((state) => state.filter((c) => c._id !== cardToDelete._id));
         closeAllPopups();
       })
-      .finally(() => setIsLoaded(false))
+      .finally(() => setIsLoadedDeletePlace(false))
       .catch(err => console.log(err));
   }
 
   function handleRegisterSubmit(data) {
+    setIsLoadedRegister(true);
     apiAuth.register(data)
       .then((res) => {
-        setIsOk(true);
+        setIsSuccessTooltipStatus(true);
         navigate('/sign-in', {replace: true});
       })
-      .finally(() => handleOpenTooltip())
+      .finally(() => {
+        handleOpenTooltip();
+        setIsLoadedRegister(false);
+      })
       .catch(err => {
-        setIsOk(false);
+        setIsSuccessTooltipStatus(false);
         console.log(err);
       })
   }
 
   function handleLoginSubmit(data) {
-    apiAuth.authorization(data)
+    setIsLoadedLogin(true);
+    apiAuth.authorize(data)
       .then((res) => {
         if (res.token){
           localStorage.setItem('jwt', res.token);
-          setToken(res.token);
           setLoggedIn(true);
           navigate('/', {replace: true});
         }
       })
+      .finally(() => setIsLoadedLogin(false))
       .catch(err => {
-        setIsOk(false);
+        setIsSuccessTooltipStatus(false);
         handleOpenTooltip()
         console.log(err);
       })
@@ -190,7 +199,6 @@ function App() {
 
   function handleSignOut() {
     localStorage.removeItem('jwt');
-    setToken('');
     setLoggedIn(false);
     navigate('/sign-in', {replace: true});
     setEmail('');
@@ -215,22 +223,47 @@ function App() {
               element={Main}
             />}
             />
-            <Route path="/sign-up" element={<Register onRegister={handleRegisterSubmit}/>}/>
-            <Route path="/sign-in" element={<Login onLogin={handleLoginSubmit}/>}/>
+            <Route path="/sign-up" element={<Register onRegister={handleRegisterSubmit} isLoaded={isLoadedRegister}/>}/>
+            <Route path="/sign-in" element={<Login onLogin={handleLoginSubmit} isLoaded={isLoadedLogin}/>}/>
+            <Route path="/*" element={<Navigate to="/" replace/>}/>
+
         </Routes>
         {loggedIn ? <Footer/> : null}
 
-        <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} isLoaded={isLoaded} onUpdateUser={handleUpdateUser}/>
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+          isLoaded={isLoadedUpdateUser}
+          onUpdateUser={handleUpdateUser}/>
 
-        <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} isLoaded={isLoaded} onAddPlace={handleAddPlaceSubmit}/>
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          isLoaded={isLoadedAddPlace}
+          onAddPlace={handleAddPlaceSubmit}/>
 
-        <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} isLoaded={isLoaded} onUpdateAvatar={handleUpdateAvatar}/>
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          isLoaded={isLoadedUpdateAvatar}
+          onUpdateAvatar={handleUpdateAvatar}/>
 
-        <DeletePlacePopup isOpen={isDeletePlacePopupOpen} onClose={closeAllPopups} isLoaded={isLoaded} onDeletePlace={handleDeletePlaceSubmit}/>
+        <DeletePlacePopup
+          isOpen={isDeletePlacePopupOpen}
+          onClose={closeAllPopups}
+          isLoaded={isLoadedDeletePlace}
+          onDeletePlace={handleDeletePlaceSubmit}/>
 
         <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
 
-        <InfoTooltip isOpen={isTooltipPopupOpen} isOk={isOk} onClose={closeAllPopups}/>
+        <InfoTooltip
+          isOpen={isTooltipPopupOpen}
+          isSuccessTooltipStatus={isSuccessTooltipStatus}
+          onClose={closeAllPopups}
+          src={isSuccessTooltipStatus ? ok : error}
+          alt={`${isSuccessTooltipStatus ? 'Успешно' : 'Ошибка'}`}
+          title={isSuccessTooltipStatus ? 'Вы успешно зарегистрировались!' : 'Что-то пошло не так! Попробуйте ещё раз.'}
+          />
       </div>
     </CurrentUserContext.Provider>
   );

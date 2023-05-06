@@ -14,12 +14,12 @@ function EditAvatarPopup({isOpen, onClose, isLoaded, onUpdateAvatar}) {
   }, [isOpen]);
 
   function handleChange(e) {
-    validAvatar.setValidator(e);
+    validAvatar.updateValidity(e);
   }
 
   function handleClose() {
     onClose();
-    validAvatar.resetValidate();
+    validAvatar.resetValidation();
   }
 
   function handleSubmit(e) {

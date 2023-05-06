@@ -22,18 +22,18 @@ function EditProfilePopup({isOpen, onClose, isLoaded, onUpdateUser}) {
 
   function handleChangeName(e) {
     setName(e.target.value);
-    validName.setValidator(e);
+    validName.updateValidity(e);
   }
 
   function handleChangeDescription(e) {
     setDescription(e.target.value);
-    validAbout.setValidator(e);
+    validAbout.updateValidity(e);
   }
 
   function handleClose() {
     onClose();
-    validName.resetValidate();
-    validAbout.resetValidate();
+    validName.resetValidation();
+    validAbout.resetValidation();
   }
 
   function handleSubmit(e) {

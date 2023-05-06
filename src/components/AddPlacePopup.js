@@ -12,11 +12,13 @@ function AddPlacePopup({isOpen, onClose, isLoaded, onAddPlace}) {
   const validPlace = useValidator();
   const validLink = useValidator();
 
-  const isDisabled = validPlace.validity && validLink.validity;
+  const isButtonEnabled = validPlace.validity && validLink.validity;
 
   useEffect(() => {
     setPlace('');
     setLink('');
+    validPlace.resetValidate();
+    validLink.resetValidate();
   }, [isOpen]);
 
   function handleChangePlace(e) {
@@ -31,8 +33,6 @@ function AddPlacePopup({isOpen, onClose, isLoaded, onAddPlace}) {
 
   function handleClose() {
     onClose();
-    validPlace.resetValidate();
-    validLink.resetValidate();
   }
 
   function handleSubmit(e) {
@@ -42,9 +42,6 @@ function AddPlacePopup({isOpen, onClose, isLoaded, onAddPlace}) {
       name: place,
       link
     });
-
-    setPlace('');
-    setLink('');
   }
 
   return (
@@ -52,7 +49,7 @@ function AddPlacePopup({isOpen, onClose, isLoaded, onAddPlace}) {
       name='card'
       title='Новое место'
       buttonText={isLoaded ? 'Создание...' : 'Создать'}
-      buttonDisabled={isDisabled}
+      isButtonEnabled={isButtonEnabled}
       isOpen={isOpen}
       onClose={handleClose}
       onSubmit={handleSubmit}

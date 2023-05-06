@@ -1,39 +1,36 @@
 import {useEffect} from 'react';
 
-import ok from '../images/ok.svg';
-import error from '../images/error.svg';
-
-const InfoTooltip = (props) => {
+const InfoTooltip = ({onClose, isOpen, src, alt, title}) => {
   useEffect(() => {
     function handleEscClose(evt) {
       if (evt.key === 'Escape') {
-        props.onClose();
+        onClose();
       }
     }
 
-    if (props.isOpen) {
+    if (isOpen) {
       document.addEventListener('keydown', handleEscClose);
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscClose);
     }
-  });
+  }, [onClose, isOpen]);
 
   return (
     <section
-      className={`popup popup_tooltip ${props.isOpen ? 'popup_opened' : ''}`}
-      onClick={(e) => e.target.classList.contains(`popup_tooltip`) ? props.onClose() : null}>
+      className={`popup popup_tooltip ${isOpen ? 'popup_opened' : ''}`}
+      onClick={(e) => e.target.classList.contains(`popup_tooltip`) ? onClose() : null}>
 
       <div className="popup__container popup__container_tooltip">
         <button
-          onClick={props.onClose}
+          onClick={onClose}
           type="button"
           className="popup__close"
           aria-label="Закрыть"/>
-        <img className='popup__img-status' src={props.isOk ? ok : error} alt={`${props.isOk ? 'Успешно' : 'Ошибка'}`}/>
+        <img className='popup__img-status' src={src} alt={alt}/>
         <p className="popup__title popup__title_center">
-          {props.isOk ? 'Вы успешно зарегистрировались!' : 'Что-то пошло не так! Попробуйте ещё раз.'}
+          {title}
         </p>
       </div>
     </section>

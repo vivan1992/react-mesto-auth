@@ -1,38 +1,41 @@
 import { useEffect } from "react";
 
-function PopupWithForm (props) {
-
+function PopupWithForm ({onClose, isOpen, name, title, children, isButtonEnabled, buttonText, onSubmit}) {
   useEffect(() => {
     function handleEscClose(evt) {
       if (evt.key === 'Escape') {
-        props.onClose();
+        onClose();
       }
     }
 
-    if (props.isOpen) {
+    if (isOpen) {
       document.addEventListener('keydown', handleEscClose);
     }
 
     return () => {
       document.removeEventListener('keydown', handleEscClose);
     }
-  });
+  }, [isOpen, onClose]);
+
+  const handleSomeEvent = (e) => {
+    return e.target.classList.contains(`popup_${name}`) ? onClose() : null;
+  }
 
   return (
     <section
-      className={`popup popup_${props.name} ${props.isOpen ? 'popup_opened' : ''}`}
-      onClick={(e) => e.target.classList.contains(`popup_${props.name}`) ? props.onClose() : null}>
+      className={`popup popup_${name} ${isOpen ? 'popup_opened' : ''}`}
+      onClick={handleSomeEvent}>
 
       <div className="popup__container">
         <button
-          onClick={props.onClose}
+          onClick={onClose}
           type="button"
           className="popup__close"
           aria-label="Закрыть"></button>
-        <h3 className="popup__title">{props.title}</h3>
-        <form name={`${props.name}-form`} className={`form form_name_${props.name}`} noValidate onSubmit={props.onSubmit}>
-          {props.children}
-          <button type="submit" className="form__button" disabled={!props.buttonDisabled} >{props.buttonText}</button>
+        <h3 className="popup__title">{title}</h3>
+        <form name={`${name}-form`} className={`form form_name_${name}`} noValidate onSubmit={onSubmit}>
+          {children}
+          <button type="submit" className="form__button" disabled={!isButtonEnabled} >{buttonText}</button>
         </form>
       </div>
     </section>

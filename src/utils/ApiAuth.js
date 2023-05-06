@@ -18,7 +18,7 @@ class ApiAuth {
     return this._request('/signup', 'POST', {"Content-Type": "application/json"}, JSON.stringify(body))
   }
 
-  authorization(body) {
+  authorize(body) {
     return this._request('/signin', 'POST', {"Content-Type": "application/json"}, JSON.stringify(body))
   }
 
