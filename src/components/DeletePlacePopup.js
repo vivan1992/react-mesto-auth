@@ -16,7 +16,7 @@ function DeletePlacePopup ({isOpen, onClose, isLoaded, onDeletePlace}) {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      buttonDisabled={true}
+      isButtonEnabled={true}
       />
   )
 }

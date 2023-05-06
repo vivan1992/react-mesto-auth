@@ -13,7 +13,7 @@ function EditProfilePopup({isOpen, onClose, isLoaded, onUpdateUser}) {
   const validName = useValidator(true);
   const validAbout = useValidator(true);
 
-  const isDisabled = validName.validity && validAbout.validity;
+  const isButtonEnabled = validName.validity && validAbout.validity;
 
   useEffect(() => {
     setName(currentUser.name);
@@ -53,7 +53,7 @@ function EditProfilePopup({isOpen, onClose, isLoaded, onUpdateUser}) {
       isOpen={isOpen}
       onClose={handleClose}
       onSubmit={handleSubmit}
-      buttonDisabled={isDisabled}
+      isButtonEnabled={isButtonEnabled}
     >
 
       <label className="form__field">

@@ -36,10 +36,10 @@ function Header(props) {
           :
           <Routes>
             <Route path="/sign-in" element={
-              <Link to="/sign-up" className="header__login-link">Войти</Link>}
+              <Link to="/sign-up" className="header__login-link">Регистрация</Link>}
             />
             <Route path="/sign-up" element={
-              <Link to="/sign-in" className="header__login-link">Регистрация</Link>}
+              <Link to="/sign-in" className="header__login-link">Войти</Link>}
             />
           </Routes>
         }

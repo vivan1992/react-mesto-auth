@@ -38,7 +38,7 @@ function EditAvatarPopup({isOpen, onClose, isLoaded, onUpdateAvatar}) {
       isOpen={isOpen}
       onClose={handleClose}
       onSubmit={handleSubmit}
-      buttonDisabled={validAvatar.validity}
+      isButtonEnabled={validAvatar.validity}
       >
 
       <label className="form__field">

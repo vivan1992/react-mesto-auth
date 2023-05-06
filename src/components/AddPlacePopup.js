@@ -17,18 +17,18 @@ function AddPlacePopup({isOpen, onClose, isLoaded, onAddPlace}) {
   useEffect(() => {
     setPlace('');
     setLink('');
-    validPlace.resetValidate();
-    validLink.resetValidate();
+    validPlace.resetValidation();
+    validLink.resetValidation();
   }, [isOpen]);
 
   function handleChangePlace(e) {
     setPlace(e.target.value);
-    validPlace.setValidator(e);
+    validPlace.updateValidity(e);
   }
 
   function handleChangeLink(e) {
     setLink(e.target.value);
-    validLink.setValidator(e);
+    validLink.updateValidity(e);
   }
 
   function handleClose() {

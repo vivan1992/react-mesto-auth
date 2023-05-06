@@ -37,7 +37,7 @@ function App() {
   const [isLoadedUpdateAvatar, setIsLoadedUpdateAvatar] = useState(false);
   const [isLoadedAddPlace, setIsLoadedAddPlace] = useState(false);
   const [isLoadedDeletePlace, setIsLoadedDeletePlace] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [isTooltipPopupOpen, setIsTooltipPopupOpen] = useState(false);
   const [isSuccessTooltipStatus, setIsSuccessTooltipStatus] = useState(true);
   const [email, setEmail] = useState('');
@@ -153,7 +153,7 @@ function App() {
 
   function handleDeletePlaceSubmit() {
     setIsLoadedDeletePlace(true);
-    api.cardToDelete(cardToDelete._id)
+    api.deleteCard(cardToDelete._id)
       .then(() => {
         setCards((state) => state.filter((c) => c._id !== cardToDelete._id));
         closeAllPopups();

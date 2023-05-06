@@ -3,7 +3,6 @@ import { useEffect } from "react";
 function ImagePopup ({card, onClose}) {
 
   useEffect(() => {
-    console.log('effict');
     function handleEscClose(evt) {
       if (evt.key === 'Escape') {
         onClose();
