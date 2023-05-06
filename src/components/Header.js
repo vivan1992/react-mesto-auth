@@ -25,16 +25,17 @@ function Header(props) {
       <header className="header">
 
         <div className="logo"></div>
-        {props.loggedIn ?
-          <>
-            <div className="header__login">
-              <p className="header__user">{props.email}</p>
-              <button className="header__login-button" onClick={onClickOut}>Выйти</button>
-            </div>
-            <div className={isBurger ? 'header__close' : 'header__burger'} onClick={onClickBurger}/>
-          </>
-          :
           <Routes>
+            <Route path="/" element={
+              <>
+                <div className="header__login">
+                  <p className="header__user">{props.email}</p>
+                  <button className="header__login-button" onClick={onClickOut}>Выйти</button>
+                </div>
+                <div className={isBurger ? 'header__close' : 'header__burger'} onClick={onClickBurger}/>
+              </>
+            }
+            />
             <Route path="/sign-in" element={
               <Link to="/sign-up" className="header__login-link">Регистрация</Link>}
             />
@@ -42,7 +43,6 @@ function Header(props) {
               <Link to="/sign-in" className="header__login-link">Войти</Link>}
             />
           </Routes>
-        }
       </header>
     </>
   );

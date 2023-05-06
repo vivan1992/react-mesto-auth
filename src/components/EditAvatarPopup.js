@@ -11,6 +11,7 @@ function EditAvatarPopup({isOpen, onClose, isLoaded, onUpdateAvatar}) {
 
   useEffect(() => {
     avatarRef.current.value = '';
+    validAvatar.resetValidation();
   }, [isOpen]);
 
   function handleChange(e) {
@@ -19,7 +20,6 @@ function EditAvatarPopup({isOpen, onClose, isLoaded, onUpdateAvatar}) {
 
   function handleClose() {
     onClose();
-    validAvatar.resetValidation();
   }
 
   function handleSubmit(e) {

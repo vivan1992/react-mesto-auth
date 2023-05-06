@@ -18,6 +18,8 @@ function EditProfilePopup({isOpen, onClose, isLoaded, onUpdateUser}) {
   useEffect(() => {
     setName(currentUser.name);
     setDescription(currentUser.about);
+    validName.resetValidation();
+    validAbout.resetValidation();
   }, [currentUser, isOpen]);
 
   function handleChangeName(e) {
@@ -32,8 +34,6 @@ function EditProfilePopup({isOpen, onClose, isLoaded, onUpdateUser}) {
 
   function handleClose() {
     onClose();
-    validName.resetValidation();
-    validAbout.resetValidation();
   }
 
   function handleSubmit(e) {

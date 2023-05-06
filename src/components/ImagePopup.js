@@ -16,16 +16,18 @@ function ImagePopup ({card, onClose}) {
     return () => {
       document.removeEventListener('keydown', handleEscClose);
     }
-  }, [card._id, onClose]);
+  }, [card._id]);
 
-  const handleSomeEvent = (e) => {
-    return e.target.classList.contains('popup_img') ? onClose() : null;
+  const handleCloseByOverlay = (e) => {
+    if (e.target.classList.contains('popup_img')) {
+      onClose();
+    }
   }
 
   return (
     <section
       className={`popup popup_img ${card._id ? 'popup_opened' : ''}`}
-      onClick={handleSomeEvent}>
+      onClick={handleCloseByOverlay}>
       <div className="popup__wrapper">
         <button
           onClick={onClose}

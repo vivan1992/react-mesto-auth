@@ -15,12 +15,18 @@ const InfoTooltip = ({onClose, isOpen, src, alt, title}) => {
     return () => {
       document.removeEventListener('keydown', handleEscClose);
     }
-  }, [onClose, isOpen]);
+  }, [isOpen]);
+
+  const handleCloseByOverlay = (e) => {
+    if (e.target.classList.contains(`popup_tooltip`)) {
+      onClose()
+    }
+  }
 
   return (
     <section
       className={`popup popup_tooltip ${isOpen ? 'popup_opened' : ''}`}
-      onClick={(e) => e.target.classList.contains(`popup_tooltip`) ? onClose() : null}>
+      onClick={handleCloseByOverlay}>
 
       <div className="popup__container popup__container_tooltip">
         <button

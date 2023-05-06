@@ -15,16 +15,18 @@ function PopupWithForm ({onClose, isOpen, name, title, children, isButtonEnabled
     return () => {
       document.removeEventListener('keydown', handleEscClose);
     }
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
-  const handleSomeEvent = (e) => {
-    return e.target.classList.contains(`popup_${name}`) ? onClose() : null;
+  const handleCloseByOverlay = (e) => {
+    if (e.target.classList.contains(`popup_${name}`)) {
+      onClose()
+    }
   }
 
   return (
     <section
       className={`popup popup_${name} ${isOpen ? 'popup_opened' : ''}`}
-      onClick={handleSomeEvent}>
+      onClick={handleCloseByOverlay}>
 
       <div className="popup__container">
         <button
